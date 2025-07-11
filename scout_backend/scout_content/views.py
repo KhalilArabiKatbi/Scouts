@@ -23,15 +23,27 @@ class MusicViewSet(viewsets.ModelViewSet):
     ordering_fields = ['title', 'type', 'category', 'difficulty', 'created_at', 'last_updated']
     ordering = ['title'] # Default ordering
 
-    # Optional: Set author automatically if user is authenticated
-    # def perform_create(self, serializer):
-    #     if self.request.user.is_authenticated:
-    #         serializer.save(author=self.request.user)
-    #     else:
-    #         # Handle cases where no user is logged in, if applicable
-    #         # For example, save without an author or raise an error
-    #         serializer.save()
+    # Permissions
+    from rest_framework.permissions import IsAuthenticatedOrReadOnly
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # Optional: Add permission classes if needed, e.g.:
-    # from rest_framework.permissions import IsAuthenticatedOrReadOnly
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    def perform_create(self, serializer):
+        """
+        Set the author of the music entry to the current user upon creation.
+        """
+        if self.request.user.is_authenticated:
+            serializer.save(author=self.request.user)
+        else:
+            # This part should ideally not be reached for POST if IsAuthenticatedOrReadOnly is working,
+            # as POST requests would require authentication.
+            # If anonymous creation was desired, permission_classes would be AllowAny for POST.
+            serializer.save()
+
+    # Optional: Further customize perform_update or perform_destroy if needed
+    # def perform_update(self, serializer):
+    #     # Example: only allow author to update their own music
+    #     # music_entry = self.get_object()
+    #     # if music_entry.author != self.request.user:
+    #     #     from rest_framework.exceptions import PermissionDenied
+    #     #     raise PermissionDenied("You do not have permission to edit this music entry.")
+    #     serializer.save()

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,26 @@ CORS_ALLOWED_ORIGINS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # BasicAuthentication and SessionAuthentication can be added if needed for browsable API, etc.
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    ),
+    # Other REST_FRAMEWORK settings like DEFAULT_PERMISSION_CLASSES can go here
+    # For example, to make views protected by default:
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
+}
+
+# Optional: Simple JWT settings (e.g., token lifetime)
+# from datetime import timedelta
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # Default is 5 minutes
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),   # Default is 1 day
+#     "ROTATE_REFRESH_TOKENS": False, # Default is False
+#     "BLACKLIST_AFTER_ROTATION": False, # Default is False
+#     # ... and other settings
+# }

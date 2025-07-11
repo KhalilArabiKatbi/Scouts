@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api'; // Consider making this an env variable
+const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content'; // For music content
+// Note: The /api/token/ endpoint is separate and not covered by this base URL.
 
 export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -108,9 +109,9 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
     try {
       let response;
       if (isEditMode && musicItem) {
-        response = await axios.put(`${API_BASE_URL}/music/${musicItem.id}/`, data, { headers });
+        response = await axios.put(`${API_CONTENT_BASE_URL}/music/${musicItem.id}/`, data, { headers }); // Use new constant
       } else {
-        response = await axios.post(`${API_BASE_URL}/music/`, data, { headers });
+        response = await axios.post(`${API_CONTENT_BASE_URL}/music/`, data, { headers }); // Use new constant
       }
       onFormSubmit(response.data); // Callback with new/updated item
       clearForm(); // Clear form after successful submission

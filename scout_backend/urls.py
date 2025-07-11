@@ -19,9 +19,16 @@ from django.urls import path, include # Added include
 from django.conf import settings # For serving media files during development
 from django.conf.urls.static import static # For serving media files during development
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('scout_content.urls')), # Added this line
+    path('api/content/', include('scout_content.urls')), # Renamed for clarity from just 'api/'
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # Serve media files during development

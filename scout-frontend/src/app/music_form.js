@@ -100,9 +100,9 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
     }
 
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     const headers = {
-      'Authorization': token ? `Bearer ${token}` : undefined,
+      'Authorization': token ? `Bearer ${token}` : '',
       // 'Content-Type': 'multipart/form-data' is automatically set by browser when using FormData
     };
 

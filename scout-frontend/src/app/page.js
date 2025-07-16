@@ -17,9 +17,9 @@ function HomePageContent() {
 
   return (
     <div className="min-h-screen bg-gray-100 font-[family-name:var(--font-geist-sans)]">
-      <header className="bg-white shadow-sm">
+      <header className="bg-[rgba(90,25,225,0.84)]">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-800">Scout Music Manager</h1>
+          <h1 className="text-2xl font-semibold text-white">Troop 22</h1>
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"

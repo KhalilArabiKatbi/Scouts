@@ -128,7 +128,7 @@ export default function MusicListPage() {
               placeholder="Enter search term..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             />
           </div>
           <div>
@@ -137,7 +137,7 @@ export default function MusicListPage() {
               id="filterType"
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
             >
               <option value="">All Types</option>
               <option value="SONG">Song (غنية)</option>
@@ -151,7 +151,7 @@ export default function MusicListPage() {
               id="filterCategory"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
             >
               <option value="">All Categories</option>
               <option value="CAMPFIRE">Campfire</option>
@@ -166,7 +166,7 @@ export default function MusicListPage() {
               id="filterDifficulty"
               value={filterDifficulty}
               onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
             >
               <option value="">All Difficulties</option>
               <option value="1">Easy</option>

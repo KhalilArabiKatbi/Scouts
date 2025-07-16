@@ -57,9 +57,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-[url('/image1.jpg')] bg-cover bg-center">
+        <div className="absolute top-8 left-8">
+          <img src="/s.svg" alt="App Logo" width={150} height={50} />
+        </div>
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
+        <h2 className="text-3xl font-bold text-center text-[rgba(90,25,225,0.84)]">Login</h2>
 
         {error && (
           <div className="p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md">
@@ -83,7 +86,7 @@ export default function LoginPage() {
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
               placeholder="Enter your username"
             />
           </div>
@@ -112,7 +115,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[rgba(90,25,225,0.84)] hover:bg-[rgba(70,30,220,0.84)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
               {isLoading ? 'Logging in...' : 'Login'}
             </button>

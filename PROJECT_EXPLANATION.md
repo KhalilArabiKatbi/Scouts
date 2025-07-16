@@ -20,11 +20,14 @@ The project is organized into two main parts:
     *   `media/`: Directory where uploaded audio files are stored locally during development.
 *   **`scout-frontend/`**: Contains the Next.js/React frontend application.
     *   `src/app/`: Core application files for the Next.js App Router.
-        *   `page.js`: The main entry point/homepage of the application.
+        *   `page.js`: The main entry point/homepage of the application. It redirects to `/login`.
+        *   `music/page.js`: The page that displays the music list. It is protected by the `withAuth` HOC.
+        *   `login/page.js`: The login page.
         *   `layout.js`: The main layout for pages.
         *   `globals.css`: Global CSS styles, including Tailwind CSS directives.
         *   `MusicListPage.js`: Component for displaying, filtering, and managing music entries.
         *   `music_form.js`: Component for the music creation and editing form.
+        *   `withAuth.js`: A Higher-Order Component (HOC) that protects pages from unauthenticated access.
     *   `public/`: Static assets.
     *   `package.json`: Node.js project metadata and dependencies.
     *   `tailwind.config.js`: Configuration for Tailwind CSS.
@@ -79,7 +82,14 @@ The `MusicViewSet` (a `ModelViewSet`) provides the core API logic for CRUD (Crea
 
 The frontend provides the user interface to interact with the music API.
 
-### 3.1. `MusicListPage.js` (`src/app/MusicListPage.js`)
+### 3.1. Authentication Flow
+
+*   **`withAuth.js`**: This HOC wraps protected pages. It checks for an `accessToken` in `localStorage`. If the token is not present, it redirects the user to the `/login` page.
+*   **`/login` page**: This page contains the `LoginPage` component, which has a form for the user to enter their username and password.
+*   **`LoginPage.js`**: On successful login, this component receives an `accessToken` and a `refreshToken` from the API. It stores these tokens in `localStorage` and redirects the user to the `/music` page.
+*   **API Requests**: For all API requests to protected endpoints, the `accessToken` is retrieved from `localStorage` and included in the `Authorization` header.
+
+### 3.2. `MusicListPage.js` (`src/app/MusicListPage.js`)
 
 This is the main component for viewing and interacting with music entries.
 *   **Data Fetching:** Uses `useEffect` and `axios` to fetch music items from `/api/music/` when the component mounts or when filter/search parameters change.
@@ -94,7 +104,7 @@ This is the main component for viewing and interacting with music entries.
 *   **State Management:** Uses `useState` for music items, loading/error states, form visibility, editing state, and filter values.
 *   **Error Handling:** Displays messages for loading errors or delete operation failures.
 
-### 3.2. `MusicForm.js` (`src/app/music_form.js`)
+### 3.3. `MusicForm.js` (`src/app/music_form.js`)
 
 This component is a form for creating and editing music entries.
 *   **Fields:** Includes inputs for title, lyrics, and select dropdowns for type, category, and difficulty, plus a file input for the audio file.
@@ -106,10 +116,15 @@ This component is a form for creating and editing music entries.
 *   **Validation & Error Handling:** Displays validation errors received from the backend next to the respective fields or as a general message at the top of the form. Input fields are highlighted on error.
 *   **Callbacks:** Uses `onFormSubmit` (after successful submission) and `onCancel` (to close the form) props.
 
-### 3.3. `page.js` (`src/app/page.js`)
+### 3.4. `page.js` (`src/app/page.js`)
 
 This is the main homepage for the Next.js application.
-*   It renders the `MusicListPage` component as its primary content.
+*   It redirects to the `/login` page.
+
+### 3.5. `music/page.js` (`src/app/music/page.js`)
+
+This page renders the `MusicListPage` component as its primary content.
+*   It is wrapped with the `withAuth` HOC to protect it from unauthenticated access.
 *   Includes a simple header with the application title ("Scout Music Manager") and a basic footer.
 
 ## 4. Connection: Frontend & Backend
@@ -122,7 +137,7 @@ This is the main homepage for the Next.js application.
     *   Deleting: `DELETE /api/music/{id}/`
 *   **Data Format:** Data is exchanged primarily in JSON format. For requests involving file uploads (create/edit music with audio), `FormData` (multipart/form-data) is used.
 *   **CORS:** The Django backend's CORS configuration allows the frontend (running on `http://localhost:3000` during development) to make these cross-origin requests.
-*   **Authentication (Basic Setup):** The frontend attempts to read a JWT token from `localStorage` and includes it in the `Authorization: Bearer <token>` header for relevant API requests. The backend's API views would need appropriate permission classes (e.g., `IsAuthenticatedOrReadOnly`) to enforce authentication for write operations.
+*   **Authentication:** The frontend sends a JWT in the `Authorization` header for all protected API requests. The backend uses `djangorestframework-simplejwt` to handle token-based authentication.
 
 ## 5. Key Development Steps Followed
 
@@ -140,8 +155,12 @@ This is the main homepage for the Next.js application.
     *   Implemented delete functionality in `MusicListPage`.
     *   Added search and filter UI and logic to `MusicListPage`.
     *   Styled components using Tailwind CSS.
-    *   Integrated `MusicListPage` into the main `page.js`.
-3.  **Refinement:**
+3.  **Authentication and Routing:**
+    *   Implemented a login page and a `withAuth` HOC to protect routes.
+    *   Set up the main page to redirect to the login page.
+    *   Created a dedicated `/music` page for the music list.
+    *   Fixed an issue where the application was stuck in a login loop.
+4.  **Refinement:**
     *   Conducted a mental end-to-end test/walkthrough.
     *   Improved error handling in `MusicForm` to display backend validation errors more clearly.
     *   Reviewed code for cleanup.

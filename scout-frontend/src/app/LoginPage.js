@@ -31,7 +31,7 @@ export default function LoginPage() {
         // Fetch user details or set some user state if needed here
         // For now, just redirect.
 
-        router.push('/'); // Redirect to homepage after successful login
+        router.push('/music'); // Redirect to music page after successful login
       } else {
         setError('Login failed: No tokens received.');
       }

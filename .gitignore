@@ -4,3 +4,9 @@
 scout_backend/db.sqlite3
 /scout-frontend/public
 /scout_backend/scout_content/__pycache__
+/scout_backend/scout_content/migrations/__pycache__
+/scout_backend/scout_content/__pycache__
+/scout_backend/scout_content/migrations/__pycache__
+/scout_backend/scout_content/migrations/__pycache__
+*.pyc
+*.pyc

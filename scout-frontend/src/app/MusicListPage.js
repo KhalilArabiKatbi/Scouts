@@ -23,7 +23,7 @@ export default function MusicListPage() {
   const fetchMusicItems = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
 
     // Construct query parameters
     const params = new URLSearchParams();
@@ -70,7 +70,7 @@ export default function MusicListPage() {
   const handleDelete = async (itemId) => {
     if (window.confirm('Are you sure you want to delete this music entry?')) {
       setError(null); // Clear previous errors specific to list loading
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       try {
         await axios.delete(`${API_CONTENT_BASE_URL}/music/${itemId}/`, { // Use correct constant
           headers: token ? { 'Authorization': `Bearer ${token}` } : {}

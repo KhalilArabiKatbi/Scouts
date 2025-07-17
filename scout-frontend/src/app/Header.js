@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import Modal from './Modal'; // Import the Modal component
+import Toast from './Toast'; // Import the Toast component
 
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isToastVisible, setIsToastVisible] = useState(false);
   const isTransparent = pathname === '/' || pathname === '/login';
 
   useEffect(() => {
@@ -23,12 +23,8 @@ const Header = () => {
   const handleMusicClick = (e) => {
     if (!isLoggedIn) {
       e.preventDefault();
-      setIsModalOpen(true);
+      setIsToastVisible(true);
     }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   return (
@@ -58,10 +54,11 @@ const Header = () => {
           </nav>
         </div>
       </header>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h2 className="text-lg font-bold">Access Denied</h2>
-        <p>You must be signed in to view this page.</p>
-      </Modal>
+      <Toast
+        message="You must be signed in to view this page."
+        isVisible={isToastVisible}
+        onHide={() => setIsToastVisible(false)}
+      />
     </>
   );
 };

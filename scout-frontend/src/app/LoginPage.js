@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation'; // For App Router navigation
+import { useRouter } from 'next/navigation';
 import Header from './Header';
-import Hero from './Hero';
-const API_BASE_URL = 'http://localhost:8000/api'; // Base API URL
+import DynamicBackground from './DynamicBackground'; // Import the new component
+
+const API_BASE_URL = 'http://localhost:8000/api';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -28,27 +29,15 @@ export default function LoginPage() {
       if (response.data.access && response.data.refresh) {
         localStorage.setItem('accessToken', response.data.access);
         localStorage.setItem('refreshToken', response.data.refresh);
-
-        // Fetch user details or set some user state if needed here
-        // For now, just redirect.
-
-        router.push('/music'); // Redirect to music page after successful login
+        router.push('/music');
       } else {
         setError('Login failed: No tokens received.');
       }
     } catch (err) {
       console.error('Login error:', err.response ? err.response.data : err.message);
       if (err.response && err.response.data) {
-        let errorMsg = '';
-        // DRF Simple JWT often returns errors in 'detail' or field-specific keys
-        if (err.response.data.detail) {
-          errorMsg = err.response.data.detail;
-        } else if (typeof err.response.data === 'object') {
-          errorMsg = Object.values(err.response.data).flat().join(' ');
-        } else {
-          errorMsg = 'Invalid username or password.';
-        }
-        setError(errorMsg || 'Login failed. Please check your credentials.');
+        let errorMsg = err.response.data.detail || 'Invalid username or password.';
+        setError(errorMsg);
       } else {
         setError('Login failed. An unexpected error occurred.');
       }
@@ -58,8 +47,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/hero1.jpg')" }}>
-      <div className="absolute inset-0 bg-black bg-opacity-60" />
+    <div className="relative min-h-screen">
+      <DynamicBackground />
       <Header />
       
       <div className="relative flex items-center justify-center min-h-screen">

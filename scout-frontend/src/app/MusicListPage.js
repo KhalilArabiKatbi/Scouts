@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import MusicForm from './music_form'; // Ensure this path is correct
-import Header from './Header';
+import InnerHeader from './InnerHeader';
 
 const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content'; // Updated base for music content
 
@@ -108,7 +108,7 @@ export default function MusicListPage() {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Header />
+      <InnerHeader />
       <div className="container mx-auto p-4 md:p-8 mt-20">
         <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4 md:mb-0">Music Entries</h1>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation'; // For App Router navigation
 import Header from './Header';
-
+import Hero from './Hero';
 const API_BASE_URL = 'http://localhost:8000/api'; // Base API URL
 
 export default function LoginPage() {
@@ -58,9 +58,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/hero-1.jpg')" }}>
+    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/hero1.jpg')" }}>
       <div className="absolute inset-0 bg-black bg-opacity-60" />
       <Header />
+      
       <div className="relative flex items-center justify-center min-h-screen">
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl">
           <h2 className="text-3xl font-bold text-center text-[rgba(90,25,225,0.84)]">Login</h2>

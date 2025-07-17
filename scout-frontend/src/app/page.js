@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import Header from './Header';
+import Hero from './Hero';
 
-export default function HomePage() {
-  const router = useRouter();
+const HomePage = () => {
+  return (
+    <div>
+      <Header />
+      <Hero />
+    </div>
+  );
+};
 
-  useEffect(() => {
-    router.replace('/login');
-  }, [router]);
-
-  return null; // Return null as the redirect will happen
-}
+export default HomePage;

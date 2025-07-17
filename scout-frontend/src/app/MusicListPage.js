@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import MusicForm from './music_form'; // Ensure this path is correct
+import Header from './Header';
 
 const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content'; // Updated base for music content
 
@@ -44,7 +45,7 @@ export default function MusicListPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchTerm, filterType, filterCategory, filterDifficulty]);
 
   useEffect(() => {
     fetchMusicItems();
@@ -106,127 +107,130 @@ export default function MusicListPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 md:mb-0">Music Entries</h1>
-        <button
-          onClick={openNewMusicForm}
-          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-sm self-start md:self-auto"
-        >
-          Add New Music
-        </button>
-      </div>
+    <div className="bg-gray-100 min-h-screen">
+      <Header />
+      <div className="container mx-auto p-4 md:p-8 mt-20">
+        <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4 md:mb-0">Music Entries</h1>
+          <button
+            onClick={openNewMusicForm}
+            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-sm self-start md:self-auto"
+          >
+            Add New Music
+          </button>
+        </div>
 
-      {/* Search and Filter UI */}
-      <div className="mb-8 p-4 bg-gray-50 rounded-lg shadow">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-          <div>
-            <label htmlFor="searchTerm" className="block text-sm font-medium text-gray-700">Search (Title/Lyrics)</label>
-            <input
-              type="text"
-              id="searchTerm"
-              placeholder="Enter search term..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
+        {/* Search and Filter UI */}
+        <div className="mb-8 p-4 bg-white rounded-lg shadow">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div>
+              <label htmlFor="searchTerm" className="block text-sm font-medium text-gray-700">Search (Title/Lyrics)</label>
+              <input
+                type="text"
+                id="searchTerm"
+                placeholder="Enter search term..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
+              />
+            </div>
+            <div>
+              <label htmlFor="filterType" className="block text-sm font-medium text-gray-700">Type</label>
+              <select
+                id="filterType"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
+              >
+                <option value="">All Types</option>
+                <option value="SONG">Song (غنية)</option>
+                <option value="CHANT">Chant (صيحة)</option>
+                <option value="CLAP">Clap (صفقة)</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filterCategory" className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                id="filterCategory"
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
+              >
+                <option value="">All Categories</option>
+                <option value="CAMPFIRE">Campfire</option>
+                <option value="MARCHING">Marching</option>
+                <option value="TRADITIONAL">Traditional</option>
+                <option value="FUN">Fun</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filterDifficulty" className="block text-sm font-medium text-gray-700">Difficulty</label>
+              <select
+                id="filterDifficulty"
+                value={filterDifficulty}
+                onChange={(e) => setFilterDifficulty(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
+              >
+                <option value="">All Difficulties</option>
+                <option value="1">Easy</option>
+                <option value="2">Medium</option>
+                <option value="3">Hard</option>
+              </select>
+            </div>
+            {/* Consider adding a Reset Filters button here */}
+          </div>
+        </div>
+
+        {showForm && (
+          <div className="my-8">
+            <MusicForm
+              musicItem={editingMusicItem}
+              onFormSubmit={handleFormSubmit}
+              onCancel={() => {
+                setShowForm(false);
+                setEditingMusicItem(null);
+              }}
             />
           </div>
-          <div>
-            <label htmlFor="filterType" className="block text-sm font-medium text-gray-700">Type</label>
-            <select
-              id="filterType"
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
-            >
-              <option value="">All Types</option>
-              <option value="SONG">Song (غنية)</option>
-              <option value="CHANT">Chant (صيحة)</option>
-              <option value="CLAP">Clap (صفقة)</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="filterCategory" className="block text-sm font-medium text-gray-700">Category</label>
-            <select
-              id="filterCategory"
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
-            >
-              <option value="">All Categories</option>
-              <option value="CAMPFIRE">Campfire</option>
-              <option value="MARCHING">Marching</option>
-              <option value="TRADITIONAL">Traditional</option>
-              <option value="FUN">Fun</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="filterDifficulty" className="block text-sm font-medium text-gray-700">Difficulty</label>
-            <select
-              id="filterDifficulty"
-              value={filterDifficulty}
-              onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-500"
-            >
-              <option value="">All Difficulties</option>
-              <option value="1">Easy</option>
-              <option value="2">Medium</option>
-              <option value="3">Hard</option>
-            </select>
-          </div>
-          {/* Consider adding a Reset Filters button here */}
-        </div>
-      </div>
+        )}
 
-      {showForm && (
-        <div className="my-8">
-          <MusicForm
-            musicItem={editingMusicItem}
-            onFormSubmit={handleFormSubmit}
-            onCancel={() => {
-              setShowForm(false);
-              setEditingMusicItem(null);
-            }}
-          />
-        </div>
-      )}
+        {musicItems.length === 0 && !isLoading && (
+          <p className="text-gray-600">No music entries found. Add some!</p>
+        )}
 
-      {musicItems.length === 0 && !isLoading && (
-        <p className="text-gray-600">No music entries found. Add some!</p>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {musicItems.map((item) => (
-          <div key={item.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-indigo-700 mb-2">{item.title}</h2>
-            <p className="text-sm text-gray-500 mb-1">Type: <span className="font-medium text-gray-700">{item.type_display || item.type}</span></p>
-            {item.category_display && <p className="text-sm text-gray-500 mb-1">Category: <span className="font-medium text-gray-700">{item.category_display}</span></p>}
-            {item.difficulty_display && <p className="text-sm text-gray-500 mb-1">Difficulty: <span className="font-medium text-gray-700">{item.difficulty_display}</span></p>}
-            {item.lyrics && <p className="text-sm text-gray-600 mt-2 mb-3 whitespace-pre-line truncate h-20">{item.lyrics}</p>}
-            {item.audio_file && (
-              <div className="mt-3">
-                <audio controls src={item.audio_file} className="w-full">
-                  Your browser does not support the audio element.
-                </audio>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {musicItems.map((item) => (
+            <div key={item.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-xl font-semibold text-indigo-700 mb-2">{item.title}</h2>
+              <p className="text-sm text-gray-500 mb-1">Type: <span className="font-medium text-gray-700">{item.type_display || item.type}</span></p>
+              {item.category_display && <p className="text-sm text-gray-500 mb-1">Category: <span className="font-medium text-gray-700">{item.category_display}</span></p>}
+              {item.difficulty_display && <p className="text-sm text-gray-500 mb-1">Difficulty: <span className="font-medium text-gray-700">{item.difficulty_display}</span></p>}
+              {item.lyrics && <p className="text-sm text-gray-600 mt-2 mb-3 whitespace-pre-line truncate h-20">{item.lyrics}</p>}
+              {item.audio_file && (
+                <div className="mt-3">
+                  <audio controls src={item.audio_file} className="w-full">
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              )}
+              <div className="mt-4 flex justify-end space-x-3">
+                <button
+                  onClick={() => handleEdit(item)}
+                  className="px-4 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-100 rounded-md hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  Edit
+                </button>
+                {/* Delete button will be added/wired up later */}
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="px-4 py-1.5 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  Delete
+                </button>
               </div>
-            )}
-            <div className="mt-4 flex justify-end space-x-3">
-              <button
-                onClick={() => handleEdit(item)}
-                className="px-4 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-100 rounded-md hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                Edit
-              </button>
-              {/* Delete button will be added/wired up later */}
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="px-4 py-1.5 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                Delete
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,20 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const images = [
   {
-    src: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    src: '/hero-1.jpg',
     text: 'Embrace the Adventure',
     subtext: 'Discover a world of excitement and challenge.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1525179657023-2599fa9eaa22?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    src: '/hero-2.jpg',
     text: 'Forge Lifelong Friendships',
     subtext: 'Connect with fellow scouts and create lasting bonds.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1517627239332-795a1b4b9a4c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    src: '/hero-3.jpg',
     text: 'Learn and Grow',
     subtext: 'Acquire new skills and unlock your full potential.',
   },
@@ -40,10 +41,12 @@ const Hero = () => {
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <img
+          <Image
             src={image.src}
             alt={image.text}
-            className="w-full h-full object-cover"
+            layout="fill"
+            objectFit="cover"
+            priority={index === 0}
           />
           <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-center p-4">
             <h2 className="text-white text-5xl md:text-6xl font-extrabold leading-tight">

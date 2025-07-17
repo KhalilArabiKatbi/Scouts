@@ -5,17 +5,17 @@ import Image from 'next/image';
 
 const images = [
   {
-    src: '/hero-bg-1.jpg',
+    src: '/hero-1.jpg',
     text: 'Embrace the Adventure',
     subtext: 'Discover a world of excitement and challenge.',
   },
   {
-    src: '/hero-bg-2.jpg',
+    src: '/hero-2.jpg',
     text: 'Forge Lifelong Friendships',
     subtext: 'Connect with fellow scouts and create lasting bonds.',
   },
   {
-    src: '/hero-bg-3.jpg',
+    src: '/hero-3.jpg',
     text: 'Learn and Grow',
     subtext: 'Acquire new skills and unlock your full potential.',
   },

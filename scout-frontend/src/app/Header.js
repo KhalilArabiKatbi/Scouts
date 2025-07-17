@@ -12,9 +12,6 @@ const Header = () => {
           <Image src="/s.svg" alt="App Logo" width={150} height={50} />
         </div>
         <nav className="flex space-x-4">
-          <Link href="/" className="text-white hover:text-gray-200 font-semibold">
-            Home
-          </Link>
           <Link href="/music" className="text-white hover:text-gray-200 font-semibold">
             Music
           </Link>

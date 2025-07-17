@@ -10,7 +10,9 @@ const InnerHeader = () => {
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center">
           <Link href="/">
-            <Image src="/s.svg" alt="App Logo" width={150} height={50} />
+            <a>
+              <Image src="/s.svg" alt="App Logo" width={150} height={50} />
+            </a>
           </Link>
         </div>
         <nav className="flex space-x-4">

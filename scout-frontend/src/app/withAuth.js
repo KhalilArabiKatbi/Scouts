@@ -3,43 +3,51 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Function to decode JWT
+function jwtDecode(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
 const withAuth = (WrappedComponent) => {
-  // This is the HOC
   const AuthComponent = (props) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-      // Ensure localStorage is available (client-side only)
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('accessToken');
         if (token) {
-          // TODO: Optionally verify token validity here with an API call
-          // For now, presence of token means authenticated
-          setIsAuthenticated(true);
+          const decodedToken = jwtDecode(token);
+          if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
+            setIsLoading(false);
+          } else {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            router.replace('/login');
+          }
         } else {
-          router.replace('/login'); // Use replace to avoid login page in history
+          router.replace('/login');
         }
-        setIsLoading(false);
       }
     }, [router]);
 
     if (isLoading) {
-      // You can return a loading spinner or a blank page here
       return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-    }
-
-    if (!isAuthenticated) {
-      // This case should ideally be handled by the redirect in useEffect,
-      // but as a fallback or if redirect hasn't happened yet.
-      return null; // Or a message, or let the redirect in useEffect handle it.
     }
 
     return <WrappedComponent {...props} />;
   };
 
-  // Set a display name for easier debugging in React DevTools
   AuthComponent.displayName = `WithAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
 
   return AuthComponent;

@@ -1,13 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const Header = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isTransparent = pathname === '/' || pathname === '/login';
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      setIsLoggedIn(!!token);
+    }
+  }, [pathname]);
+
+  const handleMusicClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      alert('You must be signed in to view this page.');
+    }
+  };
 
   return (
     <header className={`absolute top-0 left-0 right-0 z-10 ${isTransparent ? 'bg-transparent' : 'bg-black'}`}>
@@ -20,7 +36,7 @@ const Header = () => {
           <Link href="/" className="text-white hover:text-gray-200 font-semibold">
             Home
           </Link>
-          <Link href="/music" className="text-white hover:text-gray-200 font-semibold">
+          <Link href="/music" onClick={handleMusicClick} className="text-white hover:text-gray-200 font-semibold">
             Music
           </Link>
           <Link href="/scouts" className="text-white hover:text-gray-200 font-semibold">

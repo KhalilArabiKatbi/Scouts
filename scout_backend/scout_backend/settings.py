@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-2r_kupctfq8job9i5)g@vessxde=ah451h!q92hgmi)mjs=emx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,12 +129,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000', # Assuming Next.js frontend runs on port 3000
-    'http://127.0.0.1:3000',
-]
-# Alternatively, for wider access during development (less secure):
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

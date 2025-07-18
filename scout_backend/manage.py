@@ -15,6 +15,10 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    # This is a bit of a hack to always run the server on 0.0.0.0
+    if 'runserver' in sys.argv and not any(arg.startswith('0.0.0.0') or arg.startswith('[::]') for arg in sys.argv):
+        sys.argv.append('0.0.0.0:8000')
+
     execute_from_command_line(sys.argv)
 
 

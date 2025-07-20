@@ -5,7 +5,12 @@ import axios from 'axios';
 import MusicForm from './music_form'; // Ensure this path is correct
 import Header from './Header';
 
-const API_CONTENT_BASE_URL = `${process.env.API_BASE_URL}/api/content`; // Updated base for music content
+const getApiContentBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return `http://${window.location.hostname}:8000/api/content`;
+  }
+  return 'http://localhost:8000/api/content'; // Default for server-side rendering
+};
 
 export default function MusicListPage() {
   const [musicItems, setMusicItems] = useState([]);
@@ -34,7 +39,8 @@ export default function MusicListPage() {
     if (filterDifficulty) params.append('difficulty', filterDifficulty);
 
     try {
-      const response = await axios.get(`${API_CONTENT_BASE_URL}/music/?${params.toString()}`, { // Use new constant
+      const apiUrl = getApiContentBaseUrl();
+      const response = await axios.get(`${apiUrl}/music/?${params.toString()}`, { // Use new constant
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
       setMusicItems(Array.isArray(response.data) ? response.data : (response.data.results || [])); // Handle paginated or plain list response
@@ -73,7 +79,8 @@ export default function MusicListPage() {
       setError(null); // Clear previous errors specific to list loading
       const token = localStorage.getItem('accessToken');
       try {
-        await axios.delete(`${API_CONTENT_BASE_URL}/music/${itemId}/`, { // Use correct constant
+        const apiUrl = getApiContentBaseUrl();
+        await axios.delete(`${apiUrl}/music/${itemId}/`, { // Use correct constant
           headers: token ? { 'Authorization': `Bearer ${token}` } : {}
         });
         // Refresh the list after successful deletion

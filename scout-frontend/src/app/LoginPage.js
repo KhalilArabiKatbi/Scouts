@@ -1,17 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
 import DynamicBackground from './DynamicBackground'; // Import the new component
-
-const getApiBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    return `http://${window.location.hostname}:8000/api`;
-  }
-  return 'http://localhost:8000/api'; // Default for server-side rendering
-};
+import api from '@/utils/api';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -26,8 +19,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const apiUrl = getApiBaseUrl();
-      const response = await axios.post(`${apiUrl}/token/`, {
+      const response = await api.post('/token/', {
         username,
         password,
       });

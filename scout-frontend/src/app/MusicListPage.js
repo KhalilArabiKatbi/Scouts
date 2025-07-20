@@ -1,16 +1,9 @@
 'use client'; // Required for Next.js App Router components using hooks
 
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import MusicForm from './music_form'; // Ensure this path is correct
 import Header from './Header';
-
-const getApiContentBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    return `http://${window.location.hostname}:8000/api/content`;
-  }
-  return 'http://localhost:8000/api/content'; // Default for server-side rendering
-};
+import api from '@/utils/api';
 
 export default function MusicListPage() {
   const [musicItems, setMusicItems] = useState([]);
@@ -29,7 +22,6 @@ export default function MusicListPage() {
   const fetchMusicItems = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    const token = localStorage.getItem('accessToken');
 
     // Construct query parameters
     const params = new URLSearchParams();
@@ -39,10 +31,7 @@ export default function MusicListPage() {
     if (filterDifficulty) params.append('difficulty', filterDifficulty);
 
     try {
-      const apiUrl = getApiContentBaseUrl();
-      const response = await axios.get(`${apiUrl}/music/?${params.toString()}`, { // Use new constant
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-      });
+      const response = await api.get(`/content/music/?${params.toString()}`);
       setMusicItems(Array.isArray(response.data) ? response.data : (response.data.results || [])); // Handle paginated or plain list response
     } catch (err) {
       console.error('Error fetching music items:', err.response ? err.response.data : err.message);
@@ -77,12 +66,8 @@ export default function MusicListPage() {
   const handleDelete = async (itemId) => {
     if (window.confirm('Are you sure you want to delete this music entry?')) {
       setError(null); // Clear previous errors specific to list loading
-      const token = localStorage.getItem('accessToken');
       try {
-        const apiUrl = getApiContentBaseUrl();
-        await axios.delete(`${apiUrl}/music/${itemId}/`, { // Use correct constant
-          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-        });
+        await api.delete(`/content/music/${itemId}/`);
         // Refresh the list after successful deletion
         setMusicItems(prevItems => prevItems.filter(item => item.id !== itemId));
         // Or call fetchMusicItems(); if you prefer to refetch everything from server

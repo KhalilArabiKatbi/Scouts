@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content'; // For music content
-// Note: The /api/token/ endpoint is separate and not covered by this base URL.
+import api from '@/utils/api';
 
 export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -100,18 +97,12 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
     }
 
 
-    const token = localStorage.getItem('accessToken');
-    const headers = {
-      'Authorization': token ? `Bearer ${token}` : '',
-      // 'Content-Type': 'multipart/form-data' is automatically set by browser when using FormData
-    };
-
     try {
       let response;
       if (isEditMode && musicItem) {
-        response = await axios.put(`${API_CONTENT_BASE_URL}/music/${musicItem.id}/`, data, { headers }); // Use new constant
+        response = await api.put(`/content/music/${musicItem.id}/`, data);
       } else {
-        response = await axios.post(`${API_CONTENT_BASE_URL}/music/`, data, { headers }); // Use new constant
+        response = await api.post('/content/music/', data);
       }
       onFormSubmit(response.data); // Callback with new/updated item
       clearForm(); // Clear form after successful submission

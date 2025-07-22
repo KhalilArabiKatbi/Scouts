@@ -7,16 +7,19 @@ const API_CONTENT_BASE_URL = 'http://192.168.1.7:8000/api/content'; // For music
 export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     title: '',
-    type: 'SONG', // Default type
+    type: 'SONG',
     lyrics: '',
-    category: 'CAMPFIRE', // Default category
-    difficulty: 1, // Default difficulty (Easy)
+    category: 'CAMPFIRE',
+    difficulty: 1,
     audio_file: null,
+    video_file: null, // Added
+    web_link: '',     // Added
   });
   const [isEditMode, setIsEditMode] = useState(false);
-  const [formError, setFormError] = useState(null); // General form error
-  const [fieldErrors, setFieldErrors] = useState({}); // For specific field errors
-  const [fileName, setFileName] = useState('');
+  const [formError, setFormError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [audioFileName, setAudioFileName] = useState('');
+  const [videoFileName, setVideoFileName] = useState('');
 
   useEffect(() => {
     if (musicItem) {
@@ -27,12 +30,14 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
         lyrics: musicItem.lyrics || '',
         category: musicItem.category || 'CAMPFIRE',
         difficulty: musicItem.difficulty || 1,
-        audio_file: null, // Don't pre-fill file input for security/browser reasons
+        audio_file: null,
+        video_file: null,
+        web_link: musicItem.web_link || '',
       });
-      setFileName(musicItem.audio_file ? musicItem.audio_file.split('/').pop() : '');
+      setAudioFileName(musicItem.audio_file ? musicItem.audio_file.split('/').pop() : '');
+      setVideoFileName(musicItem.video_file ? musicItem.video_file.split('/').pop() : '');
     } else {
       setIsEditMode(false);
-      // Reset to default for new entries
       setFormData({
         title: '',
         type: 'SONG',
@@ -40,8 +45,11 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
         category: 'CAMPFIRE',
         difficulty: 1,
         audio_file: null,
+        video_file: null,
+        web_link: '',
       });
-      setFileName('');
+      setAudioFileName('');
+      setVideoFileName('');
     }
   }, [musicItem]);
 
@@ -51,9 +59,15 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, audio_file: file || null }));
-    setFileName(file ? file.name : (musicItem && musicItem.audio_file ? musicItem.audio_file.split('/').pop() : ''));
+    const { name, files } = e.target;
+    const file = files[0] || null;
+    setFormData((prev) => ({ ...prev, [name]: file }));
+
+    if (name === 'audio_file') {
+      setAudioFileName(file ? file.name : (musicItem?.audio_file ? musicItem.audio_file.split('/').pop() : ''));
+    } else if (name === 'video_file') {
+      setVideoFileName(file ? file.name : (musicItem?.video_file ? musicItem.video_file.split('/').pop() : ''));
+    }
   };
 
   const clearForm = () => {
@@ -64,39 +78,34 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
       category: 'CAMPFIRE',
       difficulty: 1,
       audio_file: null,
+      video_file: null,
+      web_link: '',
     });
-    setFileName('');
+    setAudioFileName('');
+    setVideoFileName('');
     setFormError(null);
     setFieldErrors({});
-    setIsEditMode(false); // Ensure mode is reset
+    setIsEditMode(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormError(null); // Clear previous general errors
-    setFieldErrors({}); // Clear previous field errors
+    setFormError(null);
+    setFieldErrors({});
 
     const data = new FormData();
     data.append('title', formData.title);
     data.append('type', formData.type);
     data.append('lyrics', formData.lyrics);
     data.append('category', formData.category);
-    data.append('difficulty', parseInt(formData.difficulty, 10)); // Ensure difficulty is an integer
+    data.append('difficulty', parseInt(formData.difficulty, 10));
+    data.append('web_link', formData.web_link);
 
-    // Only append audio_file if a new one is selected or if it's a new entry with a file
-    // For edits, if no new file is selected, backend should keep the old one (if PATCH is used)
-    // or DRF will clear it if PUT is used and field is not provided.
-    // If you want to explicitly remove a file, you'd need a separate mechanism or send null.
     if (formData.audio_file) {
       data.append('audio_file', formData.audio_file);
-    } else if (isEditMode && !formData.audio_file && musicItem && musicItem.audio_file) {
-      // If editing and no new file is chosen, we don't append audio_file to FormData.
-      // This means the backend will not receive 'audio_file' field,
-      // and with DRF using PUT, it might clear it.
-      // To preserve it with PUT, you'd have to fetch the existing URL and send it back,
-      // or the backend API must be designed to handle partial updates (PATCH) or ignore missing file fields on PUT.
-      // For simplicity here, if no new file, it might get cleared by PUT.
-      // A better approach for file updates is often PATCH or specific handling.
+    }
+    if (formData.video_file) {
+      data.append('video_file', formData.video_file);
     }
 
 
@@ -264,8 +273,36 @@ export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {
           onChange={handleFileChange}
           className={`mt-1 block w-full text-sm ${fieldErrors.audio_file ? 'text-red-700' : 'text-gray-500'} file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100`}
         />
-        {fileName && !fieldErrors.audio_file && <p className="mt-1 text-xs text-gray-500">Current file: {fileName}</p>}
+        {audioFileName && !fieldErrors.audio_file && <p className="mt-1 text-xs text-gray-500">Current file: {audioFileName}</p>}
         {fieldErrors.audio_file && <p className="mt-1 text-xs text-red-600">{fieldErrors.audio_file}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="video_file" className="block text-sm font-medium text-gray-700">Video File</label>
+        <input
+          id="video_file"
+          name="video_file"
+          type="file"
+          accept="video/*"
+          onChange={handleFileChange}
+          className={`mt-1 block w-full text-sm ${fieldErrors.video_file ? 'text-red-700' : 'text-gray-500'} file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100`}
+        />
+        {videoFileName && !fieldErrors.video_file && <p className="mt-1 text-xs text-gray-500">Current file: {videoFileName}</p>}
+        {fieldErrors.video_file && <p className="mt-1 text-xs text-red-600">{fieldErrors.video_file}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="web_link" className="block text-sm font-medium text-gray-700">Web Link</label>
+        <input
+          id="web_link"
+          name="web_link"
+          type="url"
+          placeholder="https://example.com"
+          value={formData.web_link}
+          onChange={handleChange}
+          className={`mt-1 block w-full px-3 py-2 border ${fieldErrors.web_link ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black`}
+        />
+        {fieldErrors.web_link && <p className="mt-1 text-xs text-red-600">{fieldErrors.web_link}</p>}
       </div>
 
       <div className="flex justify-end space-x-3">

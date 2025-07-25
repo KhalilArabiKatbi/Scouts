@@ -151,11 +151,11 @@ REST_FRAMEWORK = {
 }
 
 # Optional: Simple JWT settings (e.g., token lifetime)
-# from datetime import timedelta
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # Default is 5 minutes
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),   # Default is 1 day
-#     "ROTATE_REFRESH_TOKENS": False, # Default is False
-#     "BLACKLIST_AFTER_ROTATION": False, # Default is False
-#     # ... and other settings
-# }
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1), # Default is 5 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),   # Default is 1 day
+    "ROTATE_REFRESH_TOKENS": False, # Default is False
+    "BLACKLIST_AFTER_ROTATION": False, # Default is False
+    # ... and other settings
+}

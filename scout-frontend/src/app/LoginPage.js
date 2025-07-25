@@ -41,6 +41,8 @@ export default function LoginPage() {
       } else {
         setError('Login failed. An unexpected error occurred.');
       }
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     } finally {
       setIsLoading(false);
     }

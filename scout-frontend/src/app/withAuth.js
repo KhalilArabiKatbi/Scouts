@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 // Function to decode JWT
@@ -31,9 +32,23 @@ const withAuth = (WrappedComponent) => {
           if (decodedToken && decodedToken.exp * 1000 > Date.now()) {
             setIsLoading(false);
           } else {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            router.replace('/login');
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (refreshToken) {
+              axios.post('http://192.168.1.7:8000/api/token/refresh/', { refresh: refreshToken })
+                .then(response => {
+                  localStorage.setItem('accessToken', response.data.access);
+                  setIsLoading(false);
+                })
+                .catch(() => {
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
+                  router.replace('/login');
+                });
+            } else {
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              router.replace('/login');
+            }
           }
         } else {
           router.replace('/login');

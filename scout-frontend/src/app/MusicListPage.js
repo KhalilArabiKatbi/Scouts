@@ -20,6 +20,17 @@ export default function MusicListPage() {
   const [filterType, setFilterType] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // 500ms delay
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   const fetchMusicItems = useCallback(async () => {
     setIsLoading(true);
@@ -28,7 +39,7 @@ export default function MusicListPage() {
 
     // Construct query parameters
     const params = new URLSearchParams();
-    if (searchTerm) params.append('search', searchTerm);
+    if (debouncedSearchTerm) params.append('search', debouncedSearchTerm);
     if (filterType) params.append('type', filterType);
     if (filterCategory) params.append('category', filterCategory);
     if (filterDifficulty) params.append('difficulty', filterDifficulty);
@@ -45,11 +56,11 @@ export default function MusicListPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchTerm, filterType, filterCategory, filterDifficulty]);
+  }, [debouncedSearchTerm, filterType, filterCategory, filterDifficulty]);
 
   useEffect(() => {
     fetchMusicItems();
-  }, [fetchMusicItems, searchTerm, filterType, filterCategory, filterDifficulty]); // Re-fetch when filters change
+  }, [fetchMusicItems, debouncedSearchTerm, filterType, filterCategory, filterDifficulty]); // Re-fetch when filters change
 
   const handleFormSubmit = (musicItem) => {
     // After form submission (add or edit), refresh list and close form

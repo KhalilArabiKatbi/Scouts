@@ -107,7 +107,7 @@ export default function MusicListPage() {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen">
       <Header />
       <div className="container mx-auto p-4 md:p-8 mt-20">
         <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">

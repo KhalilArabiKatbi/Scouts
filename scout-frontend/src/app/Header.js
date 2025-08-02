@@ -11,6 +11,7 @@ const Header = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isToastVisible, setIsToastVisible] = useState(false);
+  const [isScoutsDropdownOpen, setIsScoutsDropdownOpen] = useState(false);
   const isTransparent = pathname === '/' || pathname === '/login';
 
   useEffect(() => {
@@ -24,6 +25,15 @@ const Header = () => {
     if (!isLoggedIn) {
       e.preventDefault();
       setIsToastVisible(true);
+    }
+  };
+
+  const handleScoutsClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      setIsToastVisible(true);
+    } else {
+      setIsScoutsDropdownOpen(!isScoutsDropdownOpen);
     }
   };
 
@@ -42,9 +52,18 @@ const Header = () => {
             <Link href="/music" onClick={handleMusicClick} className="text-white hover:text-gray-200 font-semibold">
               Music
             </Link>
-            <Link href="/scouts" className="text-white hover:text-gray-200 font-semibold">
-              Scouts
-            </Link>
+            <div className="relative">
+              <button onClick={handleScoutsClick} className="text-white hover:text-gray-200 font-semibold">
+                Scouts
+              </button>
+              {isScoutsDropdownOpen && isLoggedIn && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                  <Link href="/scouts/all" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">All</Link>
+                  <Link href="/scouts/pioneering" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">اعمال ريادة</Link>
+                  <Link href="/scouts/knots" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">عقد</Link>
+                </div>
+              )}
+            </div>
             <Link href="/login" className="text-white hover:text-gray-200 font-semibold">
               Login
             </Link>

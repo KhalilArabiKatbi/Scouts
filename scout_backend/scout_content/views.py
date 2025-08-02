@@ -1,7 +1,41 @@
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Music
-from .serializers import MusicSerializer
+from .models import Music, ScoutContent
+from .serializers import MusicSerializer, ScoutContentSerializer
+
+class ScoutContentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows scout content entries to be viewed or edited.
+    Supports filtering by type, category, and difficulty.
+    Supports searching by name and usage.
+    """
+    queryset = ScoutContent.objects.all().order_by('name')
+    serializer_class = ScoutContentSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+
+    # Fields available for filtering
+    filterset_fields = ['type', 'category', 'difficulty']
+
+    # Fields available for searching
+    search_fields = ['name', 'usage']
+
+    # Fields available for ordering
+    ordering_fields = ['name', 'type', 'category', 'difficulty', 'created_at', 'last_updated']
+    ordering = ['name'] # Default ordering
+
+    # Permissions
+    from rest_framework.permissions import IsAuthenticatedOrReadOnly
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        """
+        Set the author of the scout content entry to the current user upon creation.
+        """
+        if self.request.user.is_authenticated:
+            serializer.save(author=self.request.user)
+        else:
+            serializer.save()
+
 
 class MusicViewSet(viewsets.ModelViewSet):
     """

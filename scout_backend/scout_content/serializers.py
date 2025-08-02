@@ -1,5 +1,34 @@
 from rest_framework import serializers
-from .models import Music
+from .models import Music, ScoutContent
+
+class ScoutContentSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    type_display = serializers.CharField(source='get_type_display', read_only=True)
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    difficulty_display = serializers.CharField(source='get_difficulty_display', read_only=True)
+
+    class Meta:
+        model = ScoutContent
+        fields = [
+            'id',
+            'name',
+            'type',
+            'type_display',
+            'category',
+            'category_display',
+            'difficulty',
+            'difficulty_display',
+            'usage',
+            'youtube_link',
+            'model_3d',
+            'picture',
+            'video',
+            'author',
+            'created_at',
+            'last_updated'
+        ]
+        read_only_fields = ['author', 'created_at', 'last_updated']
+
 
 class MusicSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)

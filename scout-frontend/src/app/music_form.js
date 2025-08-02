@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_CONTENT_BASE_URL = 'http://192.168.1.7:8000/api/content'; // For music content
+const API_CONTENT_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/content`; // For music content
 // Note: The /api/token/ endpoint is separate and not covered by this base URL.
 
 export default function MusicForm({ musicItem, onFormSubmit, onCancel }) {

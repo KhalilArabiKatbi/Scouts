@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Header from './Header';
 import DynamicBackground from './DynamicBackground'; // Import the new component
 
-const API_BASE_URL = 'http://192.168.1.7:8000/api';
+const API_BASE_URL = '/api';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');

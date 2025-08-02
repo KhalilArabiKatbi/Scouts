@@ -5,7 +5,7 @@ import axios from 'axios';
 import MusicForm from './music_form'; // Ensure this path is correct
 import Header from './Header';
 
-const API_CONTENT_BASE_URL = 'http://192.168.1.7:8000/api/content'; // Updated base for music content
+const API_CONTENT_BASE_URL = '/api/content'; // Updated base for music content
 
 export default function MusicListPage() {
   const [musicItems, setMusicItems] = useState([]);

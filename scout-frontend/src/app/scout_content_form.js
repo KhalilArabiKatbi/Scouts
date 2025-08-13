@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_CONTENT_BASE_URL = 'http://192.168.1.7:8000/api/content';
+const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content';
 
 export default function ScoutContentForm({ scoutItem, onFormSubmit, onCancel }) {
   const [formData, setFormData] = useState({

@@ -34,7 +34,7 @@ const withAuth = (WrappedComponent) => {
           } else {
             const refreshToken = localStorage.getItem('refreshToken');
             if (refreshToken) {
-              axios.post('http://192.168.1.7:8000/api/token/refresh/', { refresh: refreshToken })
+              axios.post('http://localhost:8000/api/token/refresh/', { refresh: refreshToken })
                 .then(response => {
                   localStorage.setItem('accessToken', response.data.access);
                   setIsLoading(false);

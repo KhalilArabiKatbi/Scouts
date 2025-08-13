@@ -5,7 +5,7 @@ import axios from 'axios';
 import ScoutContentForm from './scout_content_form';
 import Header from './Header';
 
-const API_CONTENT_BASE_URL = 'http://192.168.1.7:8000/api/content';
+const API_CONTENT_BASE_URL = 'http://localhost:8000/api/content';
 
 export default function ScoutContentListPage({ category }) {
   const [scoutItems, setScoutItems] = useState([]);
